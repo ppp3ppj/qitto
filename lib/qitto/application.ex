@@ -7,6 +7,8 @@ defmodule Qitto.Application do
 
   @impl true
   def start(_type, _args) do
+    pubsub = System.get_env("ELIXIRKIT_PUBSUB")
+
     children = [
       QittoWeb.Telemetry,
       Qitto.Repo,
@@ -14,10 +16,18 @@ defmodule Qitto.Application do
        repos: Application.fetch_env!(:qitto, :ecto_repos), skip: skip_migrations?()},
       {DNSCluster, query: Application.get_env(:qitto, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Qitto.PubSub},
-      # Start a worker by calling: Qitto.Worker.start_link(arg)
-      # {Qitto.Worker, arg},
-      # Start to serve requests, typically the last entry
-      QittoWeb.Endpoint
+      # ElixirKit PubSub bridge — connects to Tauri when launched from desktop app
+      {ElixirKit.PubSub,
+       connect: pubsub || :ignore,
+       on_exit: fn -> System.stop() end},
+      QittoWeb.Endpoint,
+      # Notify Tauri that Phoenix + Ecto are ready — open window
+      {Task,
+       fn ->
+         if pubsub do
+           ElixirKit.PubSub.broadcast("messages", "ready")
+         end
+       end}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

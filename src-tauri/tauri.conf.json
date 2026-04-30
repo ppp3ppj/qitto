@@ -3,18 +3,8 @@
   "productName": "qitto",
   "version": "0.1.0",
   "identifier": "com.ppp3ppj.qitto",
-  "build": {
-    "frontendDist": "../src"
-  },
+  "build": {},
   "app": {
-    "withGlobalTauri": true,
-    "windows": [
-      {
-        "title": "qitto",
-        "width": 800,
-        "height": 600
-      }
-    ],
     "security": {
       "csp": null
     }
