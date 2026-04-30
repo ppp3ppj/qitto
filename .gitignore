@@ -39,3 +39,13 @@ npm-debug.log
 *.db
 *.db-*
 
+# Note: ignore it cause when deploying to production, you don't want to accidentally include your local development database file. In production, you should use environment variables to configure your database connection instead of relying on a local file.
+# Ignore digested/fingerprinted static files produced by phx.digest
+/priv/static/**/*-*.ico
+/priv/static/**/*-*.svg
+/priv/static/**/*-*.txt
+/priv/static/**/*-*.js
+/priv/static/**/*-*.css
+/priv/static/**/*.gz
+
+
