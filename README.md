@@ -41,9 +41,9 @@ Visit [http://localhost:4000](http://localhost:4000) for browser-only developmen
 
 - **Dev**: SQLite file at `qitto_dev.db` in the project root
 - **Production (bundled app)**: SQLite file at the OS app data directory
-  - Linux: `~/.local/share/qitto/qitto.db`
+  - Linux: `~/.local/share/com.ppp3ppj.qitto/qitto.db`
   - macOS: `~/Library/Application Support/qitto/qitto.db`
-  - Windows: `%APPDATA%\qitto\qitto.db`
+  - Windows: `%APPDATA%\com.ppp3ppj.qitto\qitto.db`
 
 Migrations run **automatically on every app startup** — no manual migration step needed after installing a new version.
 
