@@ -58,15 +58,80 @@ mix ecto.reset
 ## Building for Production
 
 ```bash
-# Build the Elixir release first
-MIX_ENV=prod mix release
-
-# Then build the Tauri bundle (includes the release)
 cd src-tauri
 cargo tauri build
 ```
 
-Distributable installers are output to `src-tauri/target/release/bundle/`.
+That single command does everything automatically:
+
+1. Runs `MIX_ENV=prod mix do compile + assets.deploy + release` — compiles Elixir, minifies assets, and builds a self-contained OTP release into `src-tauri/target/rel/`
+2. Compiles the Rust binary
+3. Bundles the Elixir release + Rust binary into a native installer
+
+Distributable installers are output to `src-tauri/target/release/bundle/`:
+
+| Platform | Output formats |
+|---|---|
+| Linux | `.deb`, `.AppImage` |
+| macOS | `.dmg`, `.app` |
+| Windows | `.msi`, `.exe` |
+
+### Code signing (required for public distribution)
+
+**macOS** — requires a paid Apple Developer account:
+
+```bash
+APPLE_SIGNING_IDENTITY="Developer ID Application: ..."  \
+APPLE_ID="you@example.com"                               \
+APPLE_PASSWORD="app-specific-password"                   \
+APPLE_TEAM_ID="XXXXXXXXXX"                               \
+cargo tauri build
+```
+
+**Windows** — uses Azure Trusted Signing. See the [Tauri Windows signing guide](https://v2.tauri.app/distribute/sign/windows/).
+
+**Linux** — no signing needed; `.deb` and `.AppImage` can be distributed directly.
+
+### CI/CD (GitHub Actions)
+
+Use [`tauri-apps/tauri-action`](https://github.com/tauri-apps/tauri-action) to build for all platforms in parallel:
+
+```yaml
+strategy:
+  matrix:
+    include:
+      - platform: macos-15
+        target: aarch64-apple-darwin
+      - platform: macos-15
+        target: x86_64-apple-darwin
+      - platform: ubuntu-22.04
+        target: x86_64-unknown-linux-gnu
+      - platform: windows-2022
+        target: x86_64-pc-windows-msvc
+
+runs-on: ${{ matrix.platform }}
+steps:
+  - uses: erlef/setup-beam@v1
+    with:
+      otp-version: "27"
+      elixir-version: "1.17"
+
+  - uses: tauri-apps/tauri-action@v0.6
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      MIX_ENV: prod
+      # macOS codesigning
+      APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      # Windows codesigning
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+```
+
+> **Linux note**: `erlef/setup-beam` on Ubuntu dynamically links OpenSSL, so the release may not run on other distros. Use AppImage or build per-distro for broad Linux support.
 
 ## Running Tests
 
