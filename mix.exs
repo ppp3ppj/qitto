@@ -49,8 +49,7 @@ defmodule Qitto.MixProject do
       {:phoenix_live_view, "~> 1.1.0"},
       {:lazy_html, ">= 0.1.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
-      {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
+      {:bun, "~> 1.6", runtime: Mix.env() == :dev},
       {:heroicons,
        github: "tailwindlabs/heroicons",
        tag: "v2.2.0",
@@ -82,13 +81,9 @@ defmodule Qitto.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["compile", "tailwind qitto", "esbuild qitto"],
-      "assets.deploy": [
-        "tailwind qitto --minify",
-        "esbuild qitto --minify",
-        "phx.digest"
-      ],
+      "assets.setup": ["bun.install --if-missing", "bun assets install", "assets.build"],
+      "assets.build": ["bun assets run build"],
+      "assets.deploy": ["bun assets run build", "phx.digest"],
       precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end
