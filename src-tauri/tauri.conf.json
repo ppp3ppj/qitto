@@ -3,7 +3,9 @@
   "productName": "qitto",
   "version": "0.1.0",
   "identifier": "com.ppp3ppj.qitto",
-  "build": {},
+  "build": {
+    "beforeBuildCommand": "MIX_ENV=prod mix do compile + assets.deploy + release --overwrite --path src-tauri/target/rel"
+  },
   "app": {
     "security": {
       "csp": null
@@ -11,6 +13,9 @@
   },
   "bundle": {
     "active": true,
+    "resources": {
+      "target/rel": "rel"
+    },
     "targets": "all",
     "icon": [
       "icons/32x32.png",
