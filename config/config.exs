@@ -31,9 +31,9 @@ config :qitto, QittoWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :qitto, Qitto.Mailer, adapter: Swoosh.Adapters.Local
 
-# Configure bun
+# Configure bun (the version is required)
 config :bun,
-  version: "1.3.0",
+  version: "1.3.10",
   assets: [args: ~w(), cd: Path.expand("../assets", __DIR__)]
 
 # Configure Elixir's Logger

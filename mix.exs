@@ -74,7 +74,7 @@ defmodule Qitto.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.setup": ["bun.install --if-missing", "bun assets install", "assets.build"],
+      "assets.setup": ["bun.install --if-missing", "bun assets install"],
       "assets.build": ["bun assets run build"],
       "assets.deploy": ["bun assets run build", "phx.digest"],
       precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"]
