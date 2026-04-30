@@ -4,6 +4,7 @@ use tauri::Manager;
 pub fn run() {
     let pubsub = elixirkit::PubSub::listen("tcp://127.0.0.1:0")
         .expect("failed to listen on PubSub");
+    let pubsub_url = pubsub.url();
 
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -28,7 +29,7 @@ pub fn run() {
                     .unwrap()
                     .join("rel");
 
-                let mut command = elixir_command(&rel_dir, &app_handle);
+                let mut command = elixir_command(&rel_dir, &app_handle, &pubsub_url);
                 let status = command.status().expect("failed to start Elixir");
                 app_handle.exit(status.code().unwrap_or(1));
             });
@@ -51,11 +52,13 @@ fn create_window(app_handle: &tauri::AppHandle) {
 fn elixir_command(
     rel_dir: &std::path::Path,
     app_handle: &tauri::AppHandle,
+    pubsub_url: &str,
 ) -> std::process::Command {
     if cfg!(debug_assertions) {
         // Development: run mix phx.server from the Phoenix project root
         let mut command = elixirkit::mix("phx.server", &[]);
         command.current_dir("..");
+        command.env("ELIXIRKIT_PUBSUB", pubsub_url);
         command
     } else {
         // Production: use bundled Elixir release, store SQLite DB in OS app data dir
