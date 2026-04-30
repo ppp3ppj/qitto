@@ -21,4 +21,5 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 elixirkit = { path = "../deps/elixirkit/elixirkit_rs" }
+rand = "0.8"
 
