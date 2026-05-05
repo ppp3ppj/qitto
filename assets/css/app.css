@@ -6,7 +6,7 @@
 @source "../js";
 @source "../../lib/qitto_web";
 
-@plugin "../vendor/heroicons";
+@plugin "../vendor/remixicon";
 
 /* daisyui/index.js instead of "daisyui" — workaround for @tailwindcss/vite ≤4.2.4 bug.
    @tailwindcss/vite resolves "daisyui" through Vite's browser-field, which returns
