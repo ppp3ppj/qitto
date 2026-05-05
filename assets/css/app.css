@@ -15,11 +15,16 @@
    Explicit path bypasses browser-field resolution and loads the JS entry directly.
    Upstream fix: https://github.com/tailwindlabs/tailwindcss/pull/19949
    Revert to @plugin "daisyui" once @tailwindcss/vite >4.2.4 is released. */
+
+/*
+  https://github.com/saadeghi/daisyui/issues/4505 in this PR:
+  - use daisyui/index.js instead of daisyui to avoid Vite's browser-field resolution bug
+*/
 @plugin "daisyui/index.js" {
   themes: false;
 }
 
-@plugin "daisyui/theme" {
+@plugin "daisyui/theme/index.js" {
   name: "dark";
   default: false;
   prefersdark: true;
@@ -54,7 +59,7 @@
   --noise: 0;
 }
 
-@plugin "daisyui/theme" {
+@plugin "daisyui/theme/index.js" {
   name: "light";
   default: true;
   prefersdark: false;
