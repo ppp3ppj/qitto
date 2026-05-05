@@ -22,8 +22,7 @@ config :qitto, QittoWeb.Endpoint,
   debug_errors: true,
   secret_key_base: "Abu4gmZJZqTcvOA2sk+yzeaSvy9BeVmMzTme8qJ6wJsOh4BsVjHZplxQClLrxs1Q",
   watchers: [
-    esbuild: {Esbuild, :install_and_run, [:qitto, ~w(--sourcemap=inline --watch)]},
-    tailwind: {Tailwind, :install_and_run, [:qitto, ~w(--watch)]}
+    bun_assets: {Bun, :install_and_run, [:assets, ~w(dev)]}
   ]
 
 # ## SSL Support
