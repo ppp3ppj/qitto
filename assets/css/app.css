@@ -8,6 +8,13 @@
 
 @plugin "../vendor/heroicons";
 
+/* daisyui/index.js instead of "daisyui" — workaround for @tailwindcss/vite ≤4.2.4 bug.
+   @tailwindcss/vite resolves "daisyui" through Vite's browser-field, which returns
+   daisyui.css (the pure-CSS bundle) instead of the JS plugin, causing:
+     TypeError: Unknown file extension ".css" for .../daisyui/daisyui.css
+   Explicit path bypasses browser-field resolution and loads the JS entry directly.
+   Upstream fix: https://github.com/tailwindlabs/tailwindcss/pull/19949
+   Revert to @plugin "daisyui" once @tailwindcss/vite >4.2.4 is released. */
 @plugin "daisyui/index.js" {
   themes: false;
 }
