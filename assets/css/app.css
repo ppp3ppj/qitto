@@ -8,7 +8,7 @@
 
 @plugin "../vendor/heroicons";
 
-@plugin "daisyui" {
+@plugin "daisyui/index.js" {
   themes: false;
 }
 
